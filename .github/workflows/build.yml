@@ -63,9 +63,9 @@ jobs:
       # # TODO: infer project name from CMakeLists.txt?
       # - if: runner.os == 'Windows'
       #   run: |
-      #     ( cd hello-world && cmake . && msbuild AUDIO_PLUGIN_EXAMPLE.sln )
-      #     ( cd simple-gain-control && cmake . && msbuild AUDIO_PLUGIN_EXAMPLE.sln )
-      #     ( cd delay && cmake . && msbuild AUDIO_PLUGIN_EXAMPLE.sln )
+      #     ( cd hello-world && cmake . && msbuild HELLO_WORLD.sln )
+      #     ( cd simple-gain-control && cmake . && msbuild SIMPLE_GAIN_CONTROL.sln )
+      #     ( cd delay && cmake . && msbuild DELAY.sln )
 
       - name: Upload artefacts
         uses: actions/upload-artifact@v2
