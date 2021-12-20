@@ -36,15 +36,15 @@ jobs:
       # TODO: replace with top-level CMake file
       - if: runner.os == 'macOS'
         run: |
-          ( cd hello-world && cmake . && make -j$(sysctl -n hw.logicalcpu) )
-          ( cd simple-gain-control && cmake . && make -j$(sysctl -n hw.logicalcpu) )
-          ( cd delay && cmake . && make -j$(sysctl -n hw.logicalcpu) )
+          for dir in ./src; do 
+            ( cd ${dir} && ln -s ../JUCE . && cmake . && make -j$(sysctl -n hw.logicalcpu) )
+          done
 
       # - if: runner.os == 'Linux'
       #   run: |
-      #     ( cd hello-world && cmake . && make -j$(nproc) )
-      #     ( cd simple-gain-control && cmake . && make -j$(nproc) )
-      #     ( cd delay && cmake . && make -j$(nproc) )
+      #     for dir in ./src; do 
+      #       ( cd ${dir} && cmake . && make -j$(nproc) )
+      #     done
 
       # - name: Add msbuild to PATH
       #   if: runner.os == 'Windows'
