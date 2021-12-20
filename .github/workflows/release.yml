@@ -25,16 +25,17 @@ jobs:
           branch: main
           path: artefacts
 
-      - run: |
-        mkdir release
-        for dir in ./artefacts/*; do
-          zip_file="$(basename $(pwd)).zip"
-            (
-              cd ${dir}
-              zip -r ${zip_file} .
-              mv ./${zip_file} ../../release/
-            )
-          done
+      - name: Zip each plugin
+        run: |
+          mkdir release
+          for dir in ./artefacts/*; do
+            zip_file="$(basename $(pwd)).zip"
+              (
+                cd ${dir}
+                zip -r ${zip_file} .
+                mv ./${zip_file} ../../release/
+              )
+            done
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
