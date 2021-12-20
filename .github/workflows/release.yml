@@ -1,5 +1,6 @@
 name: Release
 
+# TODO: Replace manual trigger with tagging trigger
 on:
   workflow_dispatch:
     branches:
@@ -25,8 +26,9 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          # TODO: Remove this when using version tag trigger (default behaviour)
           tag_name: "v${{ github.event.inputs.version }}"
-          name: "v${{ github.event.inputs.version }}"
           draft: false
           prerelease: false
           files: ./artefacts/*
+          fail_on_unmatched_files: true

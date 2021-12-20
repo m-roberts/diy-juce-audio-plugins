@@ -38,13 +38,13 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir artefacts
-          for dir in ./src/*; do
+          for dir in ./src/plugin/*; do
             (
               cd ${dir} && \
-              ln -s ../../lib/JUCE . && \
+              ln -s ../../../lib/JUCE . && \
               cmake . && \
               make -j$(sysctl -n hw.logicalcpu)
-              mv ./*_artefacts ../../artefacts/
+              mv ./*_artefacts ../../../artefacts/
             )
           done
           # Clean up unwanted dirs
