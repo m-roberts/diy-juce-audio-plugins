@@ -37,7 +37,12 @@ jobs:
       - if: runner.os == 'macOS'
         run: |
           for dir in ./src/*; do 
-            ( cd ${dir} && ln -s ../../lib/JUCE . && cmake . && make -j$(sysctl -n hw.logicalcpu) )
+            (
+              cd ${dir} && \
+              ln -s ../../lib/JUCE . && \
+              cmake . && \
+              make -j$(sysctl -n hw.logicalcpu)
+            )
           done
 
       # - if: runner.os == 'Linux'
