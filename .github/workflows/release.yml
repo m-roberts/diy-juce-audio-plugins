@@ -29,9 +29,9 @@ jobs:
         run: |
           mkdir release
           for dir in ./artefacts/artifact/*; do
-            zip_file="$(basename $(pwd)).zip"
               (
                 cd ${dir}
+                zip_file="$(basename $(pwd)).zip"
                 zip -r ${zip_file} .
                 mv ./${zip_file} ../../../release/
               )
