@@ -33,7 +33,13 @@ jobs:
       #       libgtk-3-dev \
       #       libwebkit2gtk-4.0-dev
 
-      - if: runner.os != 'Windows'
+      - if: runner.os == 'macOS'
+        run: |
+          ( cd hello-world && cmake . && make -j$(sysctl -n hw.logicalcpu) )
+          ( cd simple-gain-control && cmake . && make -j$(sysctl -n hw.logicalcpu) )
+          ( cd delay && cmake . && make -j$(sysctl -n hw.logicalcpu) )
+
+      - if: runner.os == 'Linux'
         run: |
           ( cd hello-world && cmake . && make -j$(nproc) )
           ( cd simple-gain-control && cmake . && make -j$(nproc) )
