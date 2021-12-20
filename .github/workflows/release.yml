@@ -43,6 +43,6 @@ jobs:
           # TODO: Remove this when using version tag trigger (default behaviour)
           tag_name: "v${{ github.event.inputs.version }}"
           draft: false
-          prerelease: false
+          prerelease: true
           files: "./release/**/*"
           fail_on_unmatched_files: true
