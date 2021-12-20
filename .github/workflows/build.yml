@@ -19,29 +19,29 @@ jobs:
         with:
           submodules: true
 
-      - name: Linux Setup
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt update
+      # - name: Linux Setup
+      #   if: runner.os == 'Linux'
+      #   run: |
+      #     sudo apt update
 
-          # CACHE THESE PACKAGES
+      #     # CACHE THESE PACKAGES
 
-          sudo apt install --no-install-recommends -y \
-            cmake \
-            libasound2-dev \
-            libcurl4-openssl-dev \
-            libgtk-3-dev \
-            libwebkit2gtk-4.0-dev
+      #     sudo apt install --no-install-recommends -y \
+      #       cmake \
+      #       libasound2-dev \
+      #       libcurl4-openssl-dev \
+      #       libgtk-3-dev \
+      #       libwebkit2gtk-4.0-dev
 
-      - run: cmake .
+      - run: cd simple-gain-control && cmake .
 
-      - name: Add msbuild to PATH
-        if: runner.os == 'Windows'
-        uses: microsoft/setup-msbuild@v1.1
+      # - name: Add msbuild to PATH
+      #   if: runner.os == 'Windows'
+      #   uses: microsoft/setup-msbuild@v1.1
 
-      # TODO: infer project name from CMakeLists.txt?
-      - run: msbuild AUDIO_PLUGIN_EXAMPLE.sln
-        if: runner.os == 'Windows'
+      # # TODO: infer project name from CMakeLists.txt?
+      # - run: msbuild AUDIO_PLUGIN_EXAMPLE.sln
+      #   if: runner.os == 'Windows'
 
       - run: make -j$(nproc)
         if: runner.os != 'Windows'
