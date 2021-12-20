@@ -33,18 +33,22 @@ jobs:
       #       libgtk-3-dev \
       #       libwebkit2gtk-4.0-dev
 
-      - run: cd simple-gain-control && cmake .
+      - if: runner.os != 'Windows'
+        run: |
+          ( cd hello-world && cmake . && make -j$(nproc) )
+          ( cd simple-gain-control && cmake . && make -j$(nproc) )
+          ( cd delay && cmake . && make -j$(nproc) )
 
       # - name: Add msbuild to PATH
       #   if: runner.os == 'Windows'
       #   uses: microsoft/setup-msbuild@v1.1
 
-      # # TODO: infer project name from CMakeLists.txt?
-      # - run: msbuild AUDIO_PLUGIN_EXAMPLE.sln
-      #   if: runner.os == 'Windows'
-
-      - run: make -j$(nproc)
-        if: runner.os != 'Windows'
+      # TODO: infer project name from CMakeLists.txt?
+      - if: runner.os == 'Windows'
+        run: |
+          ( cd hello-world && cmake . && msbuild AUDIO_PLUGIN_EXAMPLE.sln )
+          ( cd simple-gain-control && cmake . && msbuild AUDIO_PLUGIN_EXAMPLE.sln )
+          ( cd delay && cmake . && msbuild AUDIO_PLUGIN_EXAMPLE.sln )
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
