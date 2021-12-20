@@ -34,8 +34,8 @@ jobs:
       #       libwebkit2gtk-4.0-dev
 
       - if: runner.os == 'macOS'
+        # ( cd hello-world && cmake . && make -j$(sysctl -n hw.logicalcpu) )
         run: |
-          ( cd hello-world && cmake . && make -j$(sysctl -n hw.logicalcpu) )
           ( cd simple-gain-control && cmake . && make -j$(sysctl -n hw.logicalcpu) )
           ( cd delay && cmake . && make -j$(sysctl -n hw.logicalcpu) )
 
