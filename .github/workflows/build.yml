@@ -48,7 +48,7 @@ jobs:
             )
           done
           # Clean up unwanted dirs
-          rm -rf ./artefacts/*_artefacts/{JuceLibraryCode,Debug}
+          rm -rf ./artefacts/*_artefacts/{JuceLibraryCode,Debug,lib*_SharedCode.a}
 
       # - if: runner.os == 'Linux'
       #   run: |
