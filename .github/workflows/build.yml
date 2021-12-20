@@ -46,6 +46,8 @@ jobs:
               mv ./*_artefacts ../../artefacts/
             )
           done
+          # Clean up unwanted dirs
+          rm -rf ./artefacts/*_artefacts/{JuceLibraryCode,Debug}
 
       # - if: runner.os == 'Linux'
       #   run: |
