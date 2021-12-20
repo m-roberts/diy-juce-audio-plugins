@@ -48,7 +48,8 @@ jobs:
               ln -s ../../lib/JUCE . && \
               cmake . && \
               make -j$(sysctl -n hw.logicalcpu)
-              mv ./*_artefacts/AU ./*_artefacts/Standalone ./*_artefacts/VST3 ../../artefacts
+              ls -lR ./*_artefacts
+              mv ./*_artefacts/{AU,Standalone,VST3} ../../artefacts
             )
           done
 
