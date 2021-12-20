@@ -4,7 +4,7 @@ name: Release
 on:
   workflow_dispatch:
     branches:
-      - master
+      - main
     inputs:
       version:
         description: "Version Number"
@@ -20,7 +20,7 @@ jobs:
         with:
           workflow: build.yml
           workflow_conclusion: success
-          branch: master
+          branch: main
           path: artefacts
 
       - name: Create Release
