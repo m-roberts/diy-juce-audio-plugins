@@ -36,7 +36,7 @@ jobs:
       # TODO: replace with top-level CMake file
       - if: runner.os == 'macOS'
         run: |
-          for dir in ./src; do 
+          for dir in ./src/*; do 
             ( cd ${dir} && ln -s ../JUCE . && cmake . && make -j$(sysctl -n hw.logicalcpu) )
           done
 
