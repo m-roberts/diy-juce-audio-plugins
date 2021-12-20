@@ -28,12 +28,12 @@ jobs:
       - name: Zip each plugin
         run: |
           mkdir release
-          for dir in ./artefacts/*; do
+          for dir in ./artefacts/artifact/*; do
             zip_file="$(basename $(pwd)).zip"
               (
                 cd ${dir}
                 zip -r ${zip_file} .
-                mv ./${zip_file} ../../release/
+                mv ./${zip_file} ../../../release/
               )
             done
 
