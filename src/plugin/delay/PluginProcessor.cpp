@@ -22,7 +22,8 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
                        )
 #endif
 {
-    // Expose to host (automation, etc.)
+    // Parameters expose to host (automation, etc.)
+    // These are received in PluginEditor.cpp via `params = processor.getParameters()`
     addParameter(mDryWetParameter = new AudioParameterFloat("drywet", "Dry/Wet", 0.0, 1.0, 0.5));
     addParameter(mFeedbackParameter = new AudioParameterFloat("feedback", "Feedback", 0, 0.98, 0.5));
     addParameter(mDelayTimeParameter = new AudioParameterFloat("delaytime", "Delay Time", 0.01, MAX_DELAY_TIME, 0.5));
@@ -37,7 +38,6 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
     mCircularBufferWriteHead = 0;
     mCircularBufferLength = 0;
 
-    mDelayTimeInSamples = 0;
     mDelayReadHead = 0;
 }
 
@@ -123,15 +123,18 @@ void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
 {
     mCircularBufferLength = sampleRate * MAX_DELAY_TIME;
 
-    if (mCircularBufferLeft == nullptr)
-    {
-        mCircularBufferLeft = new float[mCircularBufferLength];
+    if (mCircularBufferLeft != nullptr ) {
+        delete [] mCircularBufferLeft;  
+        mCircularBufferLeft = nullptr;
     }
 
-    if (mCircularBufferRight == nullptr)
-    {
-        mCircularBufferRight = new float[mCircularBufferLength];
+    if (mCircularBufferRight != nullptr ) {
+        delete [] mCircularBufferRight;  
+        mCircularBufferRight = nullptr;
     }
+
+    mCircularBufferLeft = new float[mCircularBufferLength];
+    mCircularBufferRight = new float[mCircularBufferLength];
 
     mCircularBufferWriteHead = 0;
 }
@@ -183,8 +186,6 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    mDelayTimeInSamples = getSampleRate() * *mDelayTimeParameter;
-
     float* leftChannel = buffer.getWritePointer(0);
     float* rightChannel = buffer.getWritePointer(1);
 
@@ -193,7 +194,7 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
         mCircularBufferLeft[mCircularBufferWriteHead] = leftChannel[i] + mFeedbackLeft;
         mCircularBufferRight[mCircularBufferWriteHead] = rightChannel[i] + mFeedbackRight;
 
-        mDelayReadHead = mCircularBufferWriteHead - mDelayTimeInSamples;
+        mDelayReadHead = mCircularBufferWriteHead - getSampleRate() * *mDelayTimeParameter;
 
         if (mDelayReadHead < 0)
         {

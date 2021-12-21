@@ -17,44 +17,49 @@ NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (NewProjectAudioP
     // editor's size to whatever you need it to be.
     setSize (300, 100);
 
+    // Get from 'addParameter' in PluginProcessor.cpp
     auto& params = processor.getParameters();
 
-    AudioParameterFloat* mDryWetParameter = (AudioParameterFloat*)params.getUnchecked(0);
-    AudioParameterFloat* mFeedbackParameter = (AudioParameterFloat*)params.getUnchecked(1);
-    AudioParameterFloat* mDelayTimeParameter = (AudioParameterFloat*)params.getUnchecked(2);
+    AudioParameterFloat* dryWetParameter = (AudioParameterFloat*)params.getUnchecked(0);
 
     mDryWetSlider.setBounds(0, 0, 100, 100);
     mDryWetSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     mDryWetSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    mDryWetSlider.setRange(mDryWetParameter->range.start, mDryWetParameter->range.end);
-    mDryWetSlider.setValue(*mDryWetParameter);
+    mDryWetSlider.setRange(dryWetParameter->range.start, dryWetParameter->range.end);
+    mDryWetSlider.setValue(*dryWetParameter);
     addAndMakeVisible(mDryWetSlider);
 
-    mDryWetSlider.onValueChange = [this, mDryWetParameter] { *mDryWetParameter = mDryWetSlider.getValue(); };
-    mDryWetSlider.onDragStart = [mDryWetParameter] { mDryWetParameter->beginChangeGesture(); };
-    mDryWetSlider.onDragEnd = [mDryWetParameter] { mDryWetParameter->endChangeGesture(); };
+    mDryWetSlider.onValueChange = [this, dryWetParameter] { *dryWetParameter = mDryWetSlider.getValue(); };
+    mDryWetSlider.onDragStart = [dryWetParameter] { dryWetParameter->beginChangeGesture(); };
+    mDryWetSlider.onDragEnd = [dryWetParameter] { dryWetParameter->endChangeGesture(); };
+
+
+    AudioParameterFloat* feedbackParameter = (AudioParameterFloat*)params.getUnchecked(1);
 
     mFeedbackSlider.setBounds(100, 0, 100, 100);
     mFeedbackSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     mFeedbackSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    mFeedbackSlider.setRange(mFeedbackParameter->range.start, mFeedbackParameter->range.end);
-    mFeedbackSlider.setValue(*mFeedbackParameter);
+    mFeedbackSlider.setRange(feedbackParameter->range.start, feedbackParameter->range.end);
+    mFeedbackSlider.setValue(*feedbackParameter);
     addAndMakeVisible(mFeedbackSlider);
 
-    mFeedbackSlider.onValueChange = [this, mFeedbackParameter] { *mFeedbackParameter = mDryWetSlider.getValue(); };
-    mFeedbackSlider.onDragStart = [mFeedbackParameter] { mFeedbackParameter->beginChangeGesture(); };
-    mFeedbackSlider.onDragEnd = [mFeedbackParameter] { mFeedbackParameter->endChangeGesture(); };
+    mFeedbackSlider.onValueChange = [this, feedbackParameter] { *feedbackParameter = mDryWetSlider.getValue(); };
+    mFeedbackSlider.onDragStart = [feedbackParameter] { feedbackParameter->beginChangeGesture(); };
+    mFeedbackSlider.onDragEnd = [feedbackParameter] { feedbackParameter->endChangeGesture(); };
 
-    mDelayTimeSlider.setBounds(200, 0, 100, 100);
-    mDelayTimeSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
-    mDelayTimeSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    mDelayTimeSlider.setRange(mDelayTimeParameter->range.start, mDelayTimeParameter->range.end);
-    mDelayTimeSlider.setValue(*mDelayTimeParameter);
-    addAndMakeVisible(mDelayTimeSlider);
 
-    mDelayTimeSlider.onValueChange = [this, mDelayTimeParameter] { *mDelayTimeParameter = mDryWetSlider.getValue(); };
-    mDelayTimeSlider.onDragStart = [mDelayTimeParameter] { mDelayTimeParameter->beginChangeGesture(); };
-    mDelayTimeSlider.onDragEnd = [mDelayTimeParameter] { mDelayTimeParameter->endChangeGesture(); };
+    // AudioParameterFloat* delayTimeParameter = (AudioParameterFloat*)params.getUnchecked(2);
+
+    // mDelayTimeSlider.setBounds(200, 0, 100, 100);
+    // mDelayTimeSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
+    // mDelayTimeSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    // mDelayTimeSlider.setRange(delayTimeParameter->range.start, delayTimeParameter->range.end);
+    // mDelayTimeSlider.setValue(*delayTimeParameter);
+    // addAndMakeVisible(mDelayTimeSlider);
+
+    // mDelayTimeSlider.onValueChange = [this, delayTimeParameter] { *delayTimeParameter = mDryWetSlider.getValue(); };
+    // mDelayTimeSlider.onDragStart = [delayTimeParameter] { delayTimeParameter->beginChangeGesture(); };
+    // mDelayTimeSlider.onDragEnd = [delayTimeParameter] { delayTimeParameter->endChangeGesture(); };
 
 }
 
