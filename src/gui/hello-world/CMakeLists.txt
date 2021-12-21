@@ -33,7 +33,7 @@ juce_add_gui_app(HelloWorld
     # ICON_BIG ...                      # ICON_* arguments specify a path to an image file to use as an icon
     # ICON_SMALL ...
     # DOCUMENT_EXTENSIONS ...           # Specify file extensions that should be associated with this app
-    # COMPANY_NAME ...                  # Specify the name of the app's author
+    COMPANY_NAME m-roberts              # Specify the name of the app's author
     PRODUCT_NAME "Hello World")     # The name of the final executable, which can differ from the target name
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
