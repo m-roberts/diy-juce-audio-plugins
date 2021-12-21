@@ -31,7 +31,7 @@ jobs:
           for dir in ./artefacts/artifact/*; do
               (
                 cd ${dir}
-                zip_file="$(basename $(pwd) | sed 's/_artefacts//').zip"
+                zip_file="$(basename $(pwd)).zip"
                 zip -r ${zip_file} .
                 mv ./${zip_file} ../../../release/
               )
