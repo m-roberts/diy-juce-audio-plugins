@@ -19,5 +19,9 @@ for dir in ./src/plugin/*; do
   )
 done
 
-# Clean up unwanted dirs
+# Clean up
 rm -rf ${DIR}/artefacts/*_artefacts/{JuceLibraryCode,Debug,lib*_SharedCode.a}
+(
+  cd ${DIR}/lib/JUCE
+  git clean -fdx
+)

@@ -29,13 +29,13 @@ jobs:
         run: |
           mkdir release
           for dir in ./artefacts/artifact/*; do
-              (
-                cd ${dir}
-                zip_file="$(basename $(pwd)).zip"
-                zip -r ${zip_file} .
-                mv ./${zip_file} ../../../release/
-              )
-            done
+          (
+            cd ${dir}
+            zip_file="$(basename $(pwd)).zip"
+            zip -r ${zip_file} .
+            mv ./${zip_file} ../../../release/
+          )
+          done
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
