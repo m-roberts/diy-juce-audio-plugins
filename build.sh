@@ -12,16 +12,16 @@ for dir in ./src/plugin/*; do
     cmake .
     make -j$(sysctl -n hw.logicalcpu)
 
-    artefacts_dir=$(find . -name "*_artefacts")
+    suffix_to_remove="*_artefacts"
+    artefacts_dir="$(find . -name "${suffix_to_remove}")"
 
-    mv ${artefacts_dir} ${DIR}/artefacts/$(echo ${artefacts_dir} | sed 's/_artefacts//')
+    mv "${artefacts_dir}" "${DIR}/artefacts/$(echo ${artefacts_dir} | sed 's/_artefacts//')"
     rm -rf ./CMakeCache.txt ./CMakeFiles JUCE Makefile cmake_install.cmake
+
+    cd ${DIR}/lib/JUCE
+    git clean -fdx
   )
 done
 
-# Clean up
-rm -rf ${DIR}/artefacts/*_artefacts/{JuceLibraryCode,Debug,lib*_SharedCode.a}
-(
-  cd ${DIR}/lib/JUCE
-  git clean -fdx
-)
+# Clean up undesirable artefact files
+rm -rf ${DIR}/artefacts/*/{JuceLibraryCode,Debug,lib*_SharedCode.a}
