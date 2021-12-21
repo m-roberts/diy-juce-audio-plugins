@@ -15,7 +15,7 @@ jobs:
           submodules: true
 
       - name: Build
-        run: build.sh
+        run: ./build.sh
 
       - name: Upload artefacts
         uses: actions/upload-artifact@v2
