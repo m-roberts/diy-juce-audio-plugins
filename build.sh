@@ -31,10 +31,10 @@ for dir in ${DIR}/src/plugin/*; do
   )
 done
 
-# Symlink to ~/Library/Audio/Plug-Ins
+# Copy to ~/Library/Audio/Plug-Ins (a.k.a. 'install')
 mkdir -p ~/Library/Audio/Plug-Ins/{Components,VST3}
-find $(pwd) -name "*.component" -print0 | xargs -0 -I {} ln -s {} ~/Library/Audio/Plug-Ins/Components
-find $(pwd) -name "*.vst3" -print0 | xargs -0 -I {} ln -s {} ~/Library/Audio/Plug-Ins/VST3
+find $(pwd) -name "*.component" -print0 | xargs -0 -I {} cp -r "{}" ~/Library/Audio/Plug-Ins/Components/
+find $(pwd) -name "*.vst3" -print0 | xargs -0 -I {} cp -r "{}" ~/Library/Audio/Plug-Ins/VST3/
 
 # Clean up undesirable artefact files
 rm -rf ${DIR}/artefacts/*/{JuceLibraryCode,Debug,lib*_SharedCode.a}
