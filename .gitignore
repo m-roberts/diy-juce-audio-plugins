@@ -1,4 +1,6 @@
 artefacts/
+src/**/JUCE
+*_artefacts/
 build/*.pkg
 *.pkgproj.bak
 cmake_install.cmake

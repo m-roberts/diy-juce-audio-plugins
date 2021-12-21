@@ -46,5 +46,23 @@ sed -i '' "s|CURRENT_DIR_PLACEHOLDER|${DIR}|g" "${pkgproj}"
 # Build installer
 packagesbuild -v "${pkgproj}"
 
+# sudo pkgbuild \
+#   --component /path_to_installed_app/macapp.app \
+#   --install-location /Applications \
+#   --sign "Developer ID Installer: *******" \
+#   /path_to_saved_package/packagename.pkg
+
+# sudo productbuild \
+#   --package /path_to_saved_package/packagename.pkg \
+#   --content /path_to_app/ \
+#   --sign "Developer ID Installer: *******" \
+#   /path_to_signed_pkg/signed.pkg
+
+# TODO: sign package
+# https://apple.stackexchange.com/a/377236
+# (req's Apple Developer acct)
+#
+# /usr/sbin/spctl --assess --ignore-cache --verbose --type install ${DIR}/build/*.pkg
+
 # Unpatch installer config
 mv "${pkgproj}.bak" "${pkgproj}"

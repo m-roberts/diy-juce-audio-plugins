@@ -22,10 +22,38 @@ NewProjectAudioProcessor::NewProjectAudioProcessor()
                        )
 #endif
 {
+    // Expose to host (automation, etc.)
+    addParameter(mDryWetParameter = new AudioParameterFloat("drywet", "Dry/Wet", 0.0, 1.0, 0.5));
+    addParameter(mFeedbackParameter = new AudioParameterFloat("feedback", "Feedback", 0, 0.98, 0.5));
+    addParameter(mDelayTimeParameter = new AudioParameterFloat("delaytime", "Delay Time", 0.01, MAX_DELAY_TIME, 0.5));
+
+    mFeedbackLeft = 0;
+    mFeedbackRight = 0;
+
+    // Don't know the sample rate yet
+    mCircularBufferLeft = nullptr;
+    mCircularBufferRight = nullptr;
+
+    mCircularBufferWriteHead = 0;
+    mCircularBufferLength = 0;
+
+    mDelayTimeInSamples = 0;
+    mDelayReadHead = 0;
 }
 
 NewProjectAudioProcessor::~NewProjectAudioProcessor()
 {
+    if (mCircularBufferLeft != nullptr)
+    {
+        delete [] mCircularBufferLeft;
+        mCircularBufferLeft = nullptr;
+    }
+
+    if (mCircularBufferRight != nullptr)
+    {
+        delete [] mCircularBufferRight;
+        mCircularBufferRight = nullptr;
+    }
 }
 
 //==============================================================================
@@ -93,8 +121,19 @@ void NewProjectAudioProcessor::changeProgramName (int index, const juce::String&
 //==============================================================================
 void NewProjectAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
+    mCircularBufferLength = sampleRate * MAX_DELAY_TIME;
+
+    if (mCircularBufferLeft == nullptr)
+    {
+        mCircularBufferLeft = new float[mCircularBufferLength];
+    }
+
+    if (mCircularBufferRight == nullptr)
+    {
+        mCircularBufferRight = new float[mCircularBufferLength];
+    }
+
+    mCircularBufferWriteHead = 0;
 }
 
 void NewProjectAudioProcessor::releaseResources()
@@ -144,17 +183,39 @@ void NewProjectAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    mDelayTimeInSamples = getSampleRate() * *mDelayTimeParameter;
 
-        // ..do something to the data...
+    float* leftChannel = buffer.getWritePointer(0);
+    float* rightChannel = buffer.getWritePointer(1);
+
+    for (auto i = 0; i < buffer.getNumSamples(); i++)
+    {
+        mCircularBufferLeft[mCircularBufferWriteHead] = leftChannel[i] + mFeedbackLeft;
+        mCircularBufferRight[mCircularBufferWriteHead] = rightChannel[i] + mFeedbackRight;
+
+        mDelayReadHead = mCircularBufferWriteHead - mDelayTimeInSamples;
+
+        if (mDelayReadHead < 0)
+        {
+            mDelayReadHead += mCircularBufferLength;
+        }
+
+        float delay_sample_left = mCircularBufferLeft[(int)mDelayReadHead];
+        float delay_sample_right = mCircularBufferRight[(int)mDelayReadHead];
+
+
+        mFeedbackLeft = delay_sample_left * *mFeedbackParameter;
+        mFeedbackRight = delay_sample_right * *mFeedbackParameter;
+
+        buffer.setSample(0, i, delay_sample_left * *mDryWetParameter + buffer.getSample(0, i) * (1 - *mDryWetParameter));
+        buffer.setSample(1, i, delay_sample_right * *mDryWetParameter + buffer.getSample(1, i) * (1 - *mDryWetParameter));
+
+        mCircularBufferWriteHead++;
+
+        if (mCircularBufferWriteHead >= mCircularBufferLength)
+        {
+            mCircularBufferWriteHead = 0;
+        }
     }
 }
 
