@@ -1,9 +1,9 @@
 name: Release
 
 on:
-  # push:
-  #   tags:
-  #     - '*'
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     branches:
       - main
@@ -11,7 +11,7 @@ on:
       version:
         description: "Version Number"
         required: true
-        default: "0.0.1"
+        default: "v0.0.1"
 
 jobs:
   release:
@@ -23,26 +23,13 @@ jobs:
           workflow: build.yml
           workflow_conclusion: success
           branch: main
-          path: artefacts
-
-      - name: Zip each plugin
-        run: |
-          mkdir release
-          for dir in ./artefacts/artifact/*; do
-          (
-            cd ${dir}
-            zip_file="$(basename $(pwd)).zip"
-            zip -r ${zip_file} .
-            mv ./${zip_file} ../../../release/
-          )
-          done
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           # TODO: Remove this when using version tag trigger (default behaviour)
-          tag_name: "v${{ github.event.inputs.version }}"
+          tag_name: "${{ github.event.inputs.version }}"
           draft: false
           prerelease: true
-          files: "./release/**/*"
+          files: "./**/*"
           fail_on_unmatched_files: true
