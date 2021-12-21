@@ -15,13 +15,13 @@ NewProjectAudioProcessorEditor::NewProjectAudioProcessorEditor (NewProjectAudioP
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (100, 100);
+    setSize (200, 200);
     
     auto& params = processor.getParameters();
     juce::AudioParameterFloat* gainParameter = (juce::AudioParameterFloat*)params.getUnchecked(0);
     
-    mGainControlSlider.setBounds(0, 0, 100, 100);
-    mGainControlSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    mGainControlSlider.setBounds(50, 50, 150, 150);
+    mGainControlSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     mGainControlSlider.setTextBoxStyle(juce::Slider::NoTextBox, true, 0, 0);
     mGainControlSlider.setRange(gainParameter->range.start, gainParameter->range.end);
     mGainControlSlider.setValue(*gainParameter);
